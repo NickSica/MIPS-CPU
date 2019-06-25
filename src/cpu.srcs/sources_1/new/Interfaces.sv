@@ -4,39 +4,48 @@ interface IFtoID(input logic clk,
     
     always_ff @(posedge clk) begin
         instr <= tmpInstr;
-        pc <= tmpPC;
+        pc    <= tmpPC;
     end 
 endinterface: IFtoID
 
 interface IDtoEX(input logic clk,
-                 input logic[31:0] tmpInstr, tmpRsData, tmpRtData, tmpImm);
-    logic memWrite, memRead, memToReg, regWrite;
+                 input logic[31:0] instr, tmpRsData, tmpRtData, tmpImm);
+    logic tmpMemRead, memRead, tmpMemToReg, memToReg, tmpRegWrite, regWrite, tmpRegDst, regDst, tmpAluSrc, aluSrc;
+    logic[1:0] tmpAluOp, aluOp;
+    logic[3:0] tmpMemWrite, memWrite;
     logic[4:0] rs, rt, rd;
-    logic[31:0] instr, imm, rsData, rtData;   
+    logic[31:0] imm, rsData, rtData;    
     
     always_ff @(posedge clk) begin
-        instr <= tmpInstr;
-        rs <= tmpInstr[25:21];
-        rt <= tmpInstr[20:16];
-        rd <= tmpInstr[15:11];
-        rsData <= tmpRsData;
-        rtData <= tmpRtData;
-        imm <= tmpImm; 
+        rs       <= instr[25:21];
+        rt       <= instr[20:16];
+        rd       <= instr[15:11];
+        rsData   <= tmpRsData;
+        rtData   <= tmpRtData;
+        imm      <= tmpImm;
+        memWrite <= tmpMemWrite;
+        memRead  <= tmpMemRead;
+        memToReg <= tmpMemToReg;
+        regWrite <= tmpRegWrite;
+        regDst   <= tmpRegDst;
+        aluOp    <= tmpAluOp;
+        aluSrc   <= tmpAluSrc;
     end
     
-    modport ex(input memWrite, regWrite, memToReg, rs, rt, rd, rsData, rtData);
+    modport ex(input memWrite, memRead, regWrite, memToReg, rd);
 endinterface: IDtoEX
 
 interface EXtoMEM(IDtoEX.ex ex,
                   input logic clk,
-                  input logic[4:0] tmpRd,
                   input logic[31:0] tmpResult);
-    logic memWrite, regWrite, memToReg;
+    logic regWrite, memToReg;
+    logic[3:0] memWrite, memRead;
     logic[4:0] rd;
     logic[31:0] aluResult;
     
     always_ff @(posedge clk) begin
         memWrite  <= ex.memWrite;
+        memRead   <= ex.memRead;
         regWrite  <= ex.regWrite;
         memToReg  <= ex.memToReg;
         rd        <= ex.rd;

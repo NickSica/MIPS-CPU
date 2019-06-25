@@ -20,14 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module InstructionCache#(parameter addrW = 32, instrW = 32, length = 30, bytesPerWord = instrW >> 3)
+module InstructionCache#(parameter addrW = 32, instrW = 32, length = 100, bytesPerWord = instrW >> 3)
                         (input logic clk,
                          input logic w_en,
                          input logic[instrW-1:0] w_instr,
                          input logic[addrW-1:0] addr, 
                          output logic[instrW-1:0] instr);
                         
-    logic[instrW-1:0][length-1:0] cache;
+    logic[length-1:0][instrW-1:0] cache;
     logic[addrW-1:0] w_addr = {addrW{1'b0}};
     
     always_comb begin

@@ -1,6 +1,7 @@
 module RegisterFile(input logic clk, rst, w_en,
                     input logic[4:0] rd, rs, rt,
-                    output logic[31:0] rdData, rsData, rtData);
+                    input logic[31:0] rdData,
+                    output logic[31:0] rsData, rtData);
      
     logic[31:0][31:0] regs = 31'b0;
 

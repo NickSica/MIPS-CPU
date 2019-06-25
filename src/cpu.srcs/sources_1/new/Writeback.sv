@@ -22,12 +22,12 @@
 
 module Writeback(input logic memToReg,
                  input logic[31:0] r_ramData, aluResult,
-                 output logic[31:0] w_regData);
+                 output logic[31:0] rdData);
                  
     always_comb begin
         case(memToReg)
-            1'b0: w_regData = r_ramData;
-            1'b1: w_regData = aluResult;
+            1'b0: rdData = r_ramData;
+            1'b1: rdData = aluResult;
         endcase 
     end 
 endmodule

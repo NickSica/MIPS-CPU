@@ -20,45 +20,44 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module Execute(IDtoEX.ex ex,  
+module Execute(IDtoEX id_ex,  
                EXtoMEM.fwd fwdMEM,
                MEMtoWB.fwd fwdWB,
-               input logic aluSrc, regDst,
-               input logic[1:0] aluOp,
-               input logic[31:0] imm,
                output logic[31:0] w_ramData, aluResult);
 
     logic[31:0] rtData, rsData;
-    logic[3:0] ctrlSignal = 4'b0010;
-    logic[1:0] forwardRs = 1'b0, forwardRt = 1'b0;
+    logic[3:0] ctrlSignal;
+    logic[1:0] forwardRs = 2'b0, forwardRt = 2'b0;
     
-    ForwardingUnit fwdUnit(.fwdMEM, .fwdWB, .rs(ex.rs), .rt(ex.rt),
+    ForwardingUnit fwdUnit(.fwdMEM, .fwdWB, .rs(id_ex.rs), .rt(id_ex.rt),
                            .forwardRs, .forwardRt);
                            
-    ALUControl aluControl(.aluOp, .funct(imm[5:0]), .ctrlSignal);
-    ALU alu(.ctrlSignal, .op1(rsData), .op2(rtData), .result(aluResult));
+    ALUControl aluControl(.aluOp(id_ex.aluOp), .funct(id_ex.imm[5:0]), 
+                          .ctrlSignal);
+    ALU alu(.ctrlSignal, .op1(rsData), .op2(rtData), 
+            .result(aluResult));
                          
     always_comb begin
-        case(regDst)
-            1'b0: ex.rd <= ex.rt;
-            1'b1: ex.rd <= ex.rd;
+        case(id_ex.regDst)
+            1'b0: id_ex.rd <= id_ex.rt;
+            1'b1: id_ex.rd <= id_ex.rd;
         endcase
         
         case(forwardRs)
-            2'b00: rsData <= ex.rsData;
+            2'b00: rsData <= id_ex.rsData;
             2'b01: rsData <= fwdWB.aluResult;
             2'b10: rsData <= fwdMEM.aluResult;
         endcase 
        
-        case({forwardRt, aluSrc})
-            3'bXX1: rtData <= imm;
-            3'b000: rtData <= ex.rtData;
+        casez({forwardRt, id_ex.aluSrc})
+            3'b??1: rtData <= id_ex.imm;
+            3'b000: rtData <= id_ex.rtData;
             3'b010: rtData <= fwdWB.aluResult;
             3'b100: rtData <= fwdMEM.aluResult;
         endcase
         
         case(forwardRt)
-            2'b00: w_ramData <= ex.rtData;
+            2'b00: w_ramData <= id_ex.rtData;
             2'b01: w_ramData <= fwdWB.aluResult;
             2'b10: w_ramData <= fwdMEM.aluResult;
         endcase 

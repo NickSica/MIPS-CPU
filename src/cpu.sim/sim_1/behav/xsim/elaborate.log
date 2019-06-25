@@ -3,8 +3,6 @@ Copyright 1986-1999, 2001-2018 Xilinx, Inc. All Rights Reserved.
 Running: C:/Xilinx/Vivado/2018.3/bin/unwrapped/win64.o/xelab.exe -wto 7b8431bc0c174e7e9b984e2031874ba1 --incr --debug typical --relax --mt 2 -L blk_mem_gen_v8_4_2 -L xil_defaultlib -L unisims_ver -L unimacro_ver -L secureip -L xpm --snapshot CPU_tb_behav xil_defaultlib.CPU_tb xil_defaultlib.glbl -log elaborate.log 
 Using 2 slave threads.
 Starting static elaboration
-WARNING: [VRFC 10-3091] actual bit length 32 differs from formal bit length 1 for port 'branchPC' [C:/Users/xoepe/Documents/VIP/Final Report/cpu/cpu.srcs/sources_1/imports/MyRISCyCPU/CPU.sv:16]
-WARNING: [VRFC 10-3091] actual bit length 1 differs from formal bit length 4 for port 'memWrite' [C:/Users/xoepe/Documents/VIP/Final Report/cpu/cpu.srcs/sources_1/imports/MyRISCyCPU/CPU.sv:22]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
